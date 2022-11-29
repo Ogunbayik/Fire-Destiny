@@ -9,7 +9,6 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private float spawnRate;
 
-
     private Vector3 randomPosition;
     private int randomPlaceIndex;
     
@@ -31,6 +30,8 @@ public class SpawnManager : MonoBehaviour
     {
         var enemy = Instantiate(enemyPrefab);
         enemy.transform.position = RandomSpawnPoint();
+
+        GameManager.Instance.enemyList.Add(enemy);
     }
 
     private Vector3 RandomSpawnPoint()
@@ -58,7 +59,7 @@ public class SpawnManager : MonoBehaviour
         return randomPosition;
     }
 
-    private void ChangeSpawnRate(float value)
+    public void ChangeSpawnRate(float value)
     {
         spawnRate -= value;
     }

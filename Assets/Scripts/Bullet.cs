@@ -14,8 +14,8 @@ public class Bullet : MonoBehaviour
     private Vector3 desiredDirection;
     void Start()
     {
-        firePoint = GameObject.Find("FirePoint");
-        player = GameObject.FindGameObjectWithTag("Player");
+        firePoint = GameObject.Find(TagManager.FIREPOINT);
+        player = GameObject.FindGameObjectWithTag(TagManager.PLAYER);
 
         desiredDirection = (firePoint.transform.position - player.transform.position);
     }
@@ -35,7 +35,7 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (other.gameObject.CompareTag("Wall"))
+        if (other.gameObject.CompareTag(TagManager.WALL))
             Destroy(gameObject);
     }
 }

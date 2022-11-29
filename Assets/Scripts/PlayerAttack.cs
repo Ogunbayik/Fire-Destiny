@@ -10,7 +10,7 @@ public class PlayerAttack : MonoBehaviour
     private Transform firePoint;
     [SerializeField]
     private float startAttackRate;
-
+    
     private float attackRate;
     void Start()
     {
@@ -19,12 +19,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        attackRate -= Time.deltaTime;
-
-        if (attackRate <= 0)
-        {
-            attackRate = 0;
-        }
+        SetAttackRate();
     }
 
     private void SpawnBullet()
@@ -44,6 +39,16 @@ public class PlayerAttack : MonoBehaviour
 
     public void ChangeAttackRate(float rate)
     {
-        attackRate -= rate;
+        startAttackRate -= rate;
+    }
+
+    private void SetAttackRate()
+    {
+        attackRate -= Time.deltaTime;
+
+        if (attackRate <= 0)
+        {
+            attackRate = 0;
+        }
     }
 }

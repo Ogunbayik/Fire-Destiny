@@ -7,17 +7,13 @@ public class Enemy : MonoBehaviour , IDamageble
 {
     public static event Action<int> OnTriggerEnemy;
 
-    [SerializeField]
-    private int gainScore;
-
-    private int point;
-
-    private float movementSpeed;
-
     private GameObject player;
+    private int value;
+    private float movementSpeed;
+    
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag(TagManager.PLAYER);
         movementSpeed = 1f;
     }
 
@@ -30,19 +26,22 @@ public class Enemy : MonoBehaviour , IDamageble
     {
         var offsetPosition = new Vector3(0, -1f, 0);
         transform.position = Vector3.MoveTowards(transform.position, player.transform.position + offsetPosition, movementSpeed * Time.deltaTime);
+
+        Vector3 lookDirection = new Vector3(player.transform.position.x, 0f, player.transform.position.z);
+        transform.LookAt(lookDirection);
     }
+
 
     public void CollisionBullet()
     {
-        OnTriggerEnemy?.Invoke(point);
-
+        OnTriggerEnemy?.Invoke(value);
+        GameManager.Instance.enemyList.Remove(this.gameObject);
         Destroy(gameObject);
     }
 
     public void CollisionPlayer()
     {
-        Debug.Log("Game is Over");
-
         Destroy(gameObject);
+        GameManager.Instance.GameOver();
     }
 }

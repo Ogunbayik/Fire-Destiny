@@ -6,8 +6,7 @@ public class PlayerRotation : MonoBehaviour
 {
     [SerializeField]
     private float rotationSpeed;
-
-    [SerializeField]
+    
     private bool isRight;
 
     private void Start()

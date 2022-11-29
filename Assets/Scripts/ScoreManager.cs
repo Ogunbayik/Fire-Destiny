@@ -9,8 +9,7 @@ public class ScoreManager : MonoBehaviour
     private TextMeshProUGUI scoreText;
 
     private int currentScore;
-
-    private int addScorePoint = 10;
+    private int addScorePoint = 50;
 
     private void OnEnable()
     {
@@ -25,13 +24,13 @@ public class ScoreManager : MonoBehaviour
     {
         currentScore = 0;
 
-        scoreText.text = "SCORE: " + currentScore;
+        scoreText.text = TagManager.SCORE + currentScore;
     }
     private void AddScore(int score)
     {
         score = addScorePoint;
 
         currentScore += score;
-        scoreText.text = "SCORE: " + currentScore;
+        scoreText.text = TagManager.SCORE + currentScore;
     }
 }

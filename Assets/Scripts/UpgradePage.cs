@@ -3,40 +3,51 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class UpgradePage : MonoBehaviour
 {
+    public bool canUpgrade;
+
     private PlayerRotation playerRotation;
     private PlayerAttack playerAttack;
-
+    private SpawnManager spawnManager;
+    [Header("Rotate Settings")]
+    [SerializeField]
+    private Image rotateImage;
     [SerializeField]
     private float rotateSpeed;
     [SerializeField]
-    private int rotateSpeedPrice;
+    private int startRotatePrice;
+    [SerializeField]
+    private TextMeshProUGUI rotatePriceText;
+    [Header("Rate Settings")]
+    [SerializeField]
+    private Image rateImage;
     [SerializeField]
     private float rateSpeed;
     [SerializeField]
-    private int rateSpeedPrice;
-    [SerializeField]
-    private GameObject upgradePage;
-    [SerializeField]
-    private TextMeshProUGUI enoughText;
+    private int startRatePrice;
     [SerializeField]
     private TextMeshProUGUI ratePriceText;
+    [Space]
     [SerializeField]
-    private TextMeshProUGUI rotatePriceText;
+    private GameObject upgradePage;
 
     private bool isOpen;
-    public bool canUpgrade;
+    private bool isRateButton;
+    private bool isRotationButton;
+    
     void Start()
     {
         isOpen = false;
 
         playerRotation = FindObjectOfType<PlayerRotation>();
         playerAttack = FindObjectOfType<PlayerAttack>();
+        spawnManager = FindObjectOfType<SpawnManager>();
 
-        ratePriceText.text = rateSpeedPrice.ToString();
-        rotatePriceText.text = rotateSpeedPrice.ToString();
+        ratePriceText.text = startRatePrice.ToString();
+        rotatePriceText.text = startRotatePrice.ToString();
     }
 
     void Update()
@@ -58,56 +69,79 @@ public class UpgradePage : MonoBehaviour
 
     public void UpgradeRotation()
     {
-        if (GoldManager.Instance.currentGold >= rotateSpeedPrice)
+        isRotationButton = true;
+        if (GoldManager.Instance.currentGold >= startRotatePrice)
         {
             playerRotation.ChangeRotateSpeed(rotateSpeed);
 
-            GoldManager.Instance.RemoveGold(rotateSpeedPrice);
-            rotateSpeedPrice *= 2;
-            rotatePriceText.text = rotateSpeedPrice.ToString();
+            GoldManager.Instance.RemoveGold(startRotatePrice);
+            startRotatePrice *= 2;
+            rotatePriceText.text = startRotatePrice.ToString();
+
+            DecreaseSummoneRate();
         }
         else
         {
-            StartCoroutine(nameof(ShowEnoughText));
+            StartCoroutine(nameof(ChangeImageColor));
         }
     }
     public void UpgradeFireRate()
     {
-        if (GoldManager.Instance.currentGold >= rateSpeedPrice)
+        isRateButton = true;
+        if (GoldManager.Instance.currentGold >= startRatePrice)
         {
             playerAttack.ChangeAttackRate(rateSpeed);
 
-            GoldManager.Instance.RemoveGold(rateSpeedPrice);
-            rateSpeedPrice *= 2;
-            ratePriceText.text = rateSpeedPrice.ToString();
+            GoldManager.Instance.RemoveGold(startRatePrice);
+            startRatePrice *= 2;
+            ratePriceText.text = startRatePrice.ToString();
+
+            DecreaseSummoneRate();
         }
         else
         {
-            StartCoroutine(nameof(ShowEnoughText));
+            StartCoroutine(nameof(ChangeImageColor));
         }
     }
 
-    IEnumerator ShowEnoughText()
+    IEnumerator ChangeImageColor()
     {
-        ShowText();
+        ChangeRedColor();
         yield return new WaitForSeconds(0.2f);
-        CloseText();
+        ResetClickedButton();
+        ChangeNormalColor();
     }
-    private void ShowText()
+    private void ChangeRedColor()
     {
-        //enoughText.gameObject.SetActive(true);
-        Debug.Log("Text is open");
+        if (isRotationButton == true)
+        {
+            rotateImage.color = Color.red;
+        }
+        else if(isRateButton == true)
+        {
+            rateImage.color = Color.red;
+        }
     }
-
-    private void CloseText()
+    private void ChangeNormalColor()
     {
-        Debug.Log("Text is close");
-        //enoughText.gameObject.SetActive(false);
+        rotateImage.color = Color.white;
+        rateImage.color = Color.white;
+    }
+    private void ResetClickedButton()
+    {
+        isRotationButton = false;
+        isRateButton = false;
     }
 
     public void SetUpgradePage()
     {
         isOpen = !isOpen;
+    }
+
+    private void DecreaseSummoneRate()
+    {
+        float decreaseRate = 0.3f;
+        spawnManager.ChangeSpawnRate(decreaseRate);
     }
 
 }
